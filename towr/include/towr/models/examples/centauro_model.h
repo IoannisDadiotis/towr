@@ -45,9 +45,9 @@ public:
   {
     const double x_nominal_b = 0.35;
     const double y_nominal_b = 0.35;
-    const double z_nominal_b = -0.718;
+    const double z_nominal_b = -0.668; // 5 cm lower than homing
 
-    nominal_stance_.at(LF) <<  x_nominal_b - 0.1,   y_nominal_b, z_nominal_b;
+    nominal_stance_.at(LF) <<  x_nominal_b - 0.1,   y_nominal_b, z_nominal_b;   // CoM 10 cm forward
     nominal_stance_.at(RF) <<  x_nominal_b - 0.1,  -y_nominal_b, z_nominal_b;
     nominal_stance_.at(LH) << -x_nominal_b - 0.1,   y_nominal_b, z_nominal_b;
     nominal_stance_.at(RH) << -x_nominal_b - 0.1,  -y_nominal_b, z_nominal_b;
