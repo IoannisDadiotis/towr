@@ -60,4 +60,31 @@ SplineHolder::SplineHolder (NodesVariables::Ptr base_lin_nodes,
   }
 }
 
+// Constructor for only linear base pose (not used until now)
+SplineHolder::SplineHolder (NodesVariables::Ptr base_lin_nodes,
+                            const std::vector<double>& base_poly_durations,
+                            std::vector<NodesVariablesPhaseBased::Ptr> ee_motion_nodes,
+                            std::vector<NodesVariablesPhaseBased::Ptr> ee_force_nodes,
+                            std::vector<PhaseDurations::Ptr> phase_durations,
+                            bool durations_change)
+{
+  base_linear_  = std::make_shared<NodeSpline>(base_lin_nodes.get(), base_poly_durations);
+  phase_durations_ = phase_durations;
+
+  for (uint ee=0; ee<ee_motion_nodes.size(); ++ee) {
+    if (durations_change) {
+      // spline that changes the polynomial durations (affects Jacobian)
+      ee_motion_.push_back(std::make_shared<PhaseSpline>(ee_motion_nodes.at(ee), phase_durations.at(ee).get()));
+      ee_force_.push_back(std::make_shared<PhaseSpline>(ee_force_nodes.at(ee), phase_durations.at(ee).get()));
+    } else {
+      // spline without changing the polynomial durations
+      auto ee_motion_poly_durations = ee_motion_nodes.at(ee)->ConvertPhaseToPolyDurations(phase_durations.at(ee)->GetPhaseDurations());
+      auto ee_force_poly_durations = ee_force_nodes.at(ee)->ConvertPhaseToPolyDurations(phase_durations.at(ee)->GetPhaseDurations());
+
+      ee_motion_.push_back(std::make_shared<NodeSpline>(ee_motion_nodes.at(ee).get(), ee_motion_poly_durations));
+      ee_force_.push_back (std::make_shared<NodeSpline>(ee_force_nodes.at(ee).get(), ee_force_poly_durations));
+    }
+  }
+}
+
 } /* namespace towr */
