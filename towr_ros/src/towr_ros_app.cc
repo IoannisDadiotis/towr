@@ -81,8 +81,10 @@ public:
     // increases optimization time, but sometimes helps find a solution for
     // more difficult terrain.
     if (msg.optimize_phase_durations)
-      params.OptimizePhaseDurations();
-
+    {
+        //params.bound_phase_duration_ = std::make_pair(5.0, 5.0);
+        params.OptimizePhaseDurations();
+    }
     return params;
   }
 
