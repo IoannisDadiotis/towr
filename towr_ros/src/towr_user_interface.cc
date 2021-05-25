@@ -70,7 +70,7 @@ TowrUserInterface::TowrUserInterface ()
   robot_      = RobotModel::Centauro;
   terrain_    = HeightMap::FlatID;
   gait_combo_ = GaitGenerator::C5;
-  total_duration_ = 17.0;
+  total_duration_ = 9.0;
   visualize_trajectory_ = false;
   plot_trajectory_ = false;
   replay_speed_ = 1.0; // realtime

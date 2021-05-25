@@ -166,7 +166,7 @@ QuadrupedGaitGenerator::GetStridePronk () const
 QuadrupedGaitGenerator::GaitInfo
 QuadrupedGaitGenerator::GetStrideWalkSlow () const
 {
-  double step  = 3.0;
+  double step  = 1.0;
   double stand = 1.0;
   auto times =
   {
