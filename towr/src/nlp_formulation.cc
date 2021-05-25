@@ -379,6 +379,8 @@ NlpFormulation::GetCost(const Parameters::CostName& name, double weight) const
   switch (name) {
     case Parameters::ForcesCostID:   return MakeForcesCost(weight);
     case Parameters::EEMotionCostID: return MakeEEMotionCost(weight);
+    case Parameters::BaseVelLinCostID: return MakeBaseVelLinCost(weight);
+    case Parameters::BaseVelAngCostID: return MakeBaseVelAngCost(weight);
     default: throw std::runtime_error("cost not defined!");
   }
 }
@@ -403,6 +405,27 @@ NlpFormulation::MakeEEMotionCost(double weight) const
     cost.push_back(std::make_shared<NodeCost>(id::EEMotionNodes(ee), kVel, X, weight));
     cost.push_back(std::make_shared<NodeCost>(id::EEMotionNodes(ee), kVel, Y, weight));
   }
+
+  return cost;
+}
+
+NlpFormulation::CostPtrVec NlpFormulation::MakeBaseVelLinCost(double weight) const
+{
+  CostPtrVec cost;
+  cost.push_back(std::make_shared<NodeCost>(id::base_lin_nodes, kVel, X, weight));
+  cost.push_back(std::make_shared<NodeCost>(id::base_lin_nodes, kVel, Y, weight));
+  cost.push_back(std::make_shared<NodeCost>(id::base_lin_nodes, kVel, Z, weight));
+
+  return cost;
+}
+
+NlpFormulation::CostPtrVec NlpFormulation::MakeBaseVelAngCost(double weight) const
+{
+  CostPtrVec cost;
+
+  cost.push_back(std::make_shared<NodeCost>(id::base_ang_nodes, kVel, X, weight));
+  cost.push_back(std::make_shared<NodeCost>(id::base_ang_nodes, kVel, Y, weight));
+  cost.push_back(std::make_shared<NodeCost>(id::base_ang_nodes, kVel, Z, weight));
 
   return cost;
 }
