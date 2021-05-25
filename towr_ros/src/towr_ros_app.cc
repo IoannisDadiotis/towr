@@ -76,7 +76,10 @@ public:
     }
 
     // Here you can also add other constraints or change parameters
-    // params.constraints_.push_back(Parameters::BaseRom);
+    // otherwise the default are considered from parameters.cc file
+    params.dt_constraint_dynamic_ = 0.3;
+    params.dt_constraint_range_of_motion_ = 0.5;
+    params.duration_base_polynomial_ = 0.3;
 
     // increases optimization time, but sometimes helps find a solution for
     // more difficult terrain.
@@ -109,7 +112,7 @@ public:
     // deviation of 10e-4, which is fine. What to watch out for is deviations > 10e-2.
     // solver_->SetOption("derivative_test", "first-order");
 
-    solver_->SetOption("max_cpu_time", 40.0);
+    solver_->SetOption("max_cpu_time", 100.0);
     solver_->SetOption("print_level", 5);
 
     if (msg.play_initialization)

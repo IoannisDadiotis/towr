@@ -75,8 +75,12 @@ public:
       params.ee_in_contact_at_start_.push_back(gait_gen_->IsInContactAtStart(ee));
     }
 
-    // Here you can also add other constraints or change parameters
+    /* Here you can also add other constraints or change parameters
+     * otherwise the params have the default values from parameters.cc file
+     */
+
     // params.constraints_.push_back(Parameters::BaseRom);
+    params.dt_constraint_dynamic_ = 0.2;
 
     // increases optimization time, but sometimes helps find a solution for
     // more difficult terrain.
