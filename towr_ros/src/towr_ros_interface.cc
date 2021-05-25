@@ -90,6 +90,12 @@ TowrRosInterface::UserCommandCallback(const TowrCommandMsg& msg)
   formulation_.params_ = GetTowrParameters(n_ee, msg);
   formulation_.final_base_ = GetGoalState(msg);
 
+  // Printing the parameters to debug
+  ROS_INFO(">>>>>> Base polynomial duration is %f sec<<<<<<", formulation_.params_.duration_base_polynomial_);
+  ROS_INFO(">>>>>> Constraint RoM dt is %f sec<<<<<<", formulation_.params_.dt_constraint_range_of_motion_);
+  ROS_INFO(">>>>>> Constraint Dynamic dt is %f sec<<<<<<", formulation_.params_.dt_constraint_dynamic_);
+  ROS_INFO(">>>>>> Constraint base motion dt is %f sec<<<<<<", formulation_.params_.dt_constraint_base_motion_);
+
   SetTowrInitialState();
 
   // solver parameters
@@ -111,6 +117,9 @@ TowrRosInterface::UserCommandCallback(const TowrCommandMsg& msg)
 
     solver_->Solve(nlp_);
     SaveOptimizationAsRosbag(bag_file, robot_params_msg, msg, false);
+
+    // Print constraints etc
+    nlp_.PrintCurrent();
   }
 
   // playback using terminal commands
