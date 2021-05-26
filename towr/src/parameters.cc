@@ -63,7 +63,7 @@ Parameters::Parameters ()
 
   // optional costs to e.g penalize endeffector forces
   costs_.push_back({ForcesCostID, 1.0e-6}); //weighed by 1.0 relative to other costs
-  costs_.push_back({EEMotionCostID, 1.0});
+  costs_.push_back({EEMotionCostID, 100000.0});
   costs_.push_back({BaseVelLinCostID, 100.0});
   costs_.push_back({BaseVelAngCostID, 100.0});
 
