@@ -96,7 +96,6 @@ public:
   /** @brief The ifopt costs to tune the motion. */
   ContraintPtrVec GetCosts() const;
 
-
   BaseState initial_base_;
   BaseState final_base_;
   EEPos  initial_ee_W_;
