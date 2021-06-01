@@ -52,7 +52,7 @@ public:
     nominal_stance_.at(LH) << -x_nominal_b - 0.1,   y_nominal_b, z_nominal_b;
     nominal_stance_.at(RH) << -x_nominal_b - 0.1,  -y_nominal_b, z_nominal_b;
 
-    max_dev_from_nominal_ << 0.25, 0.2, 0.25;
+    max_dev_from_nominal_ << 0.25, 0.15, 0.15;   //dz = 0.25
     // Forward feet -0.25<dx<0.3, -0.2<dy<0.25, -0.15<dz<0.3
     // Hind feet    -0.3<dx<0.3, -0.25<dy<0.25, -0.15<dz<0.3
   }
@@ -61,6 +61,7 @@ public:
 /**
  * @brief The Dynamics of the quadruped robot Centauro.
  */
+
 class CentauroDynamicModel : public SRBD_zero_momentum {
 public:
   CentauroDynamicModel()
