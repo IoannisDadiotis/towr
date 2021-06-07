@@ -178,7 +178,8 @@ NlpFormulation::MakeEndeffectorVariables () const
     double x = final_ee_pos_W.x();
     double y = final_ee_pos_W.y();
     double z = terrain_->GetHeight(x,y);
-    nodes->SetByLinearInterpolation(initial_ee_W_.at(ee), Vector3d(x,y,z), T);
+    //nodes->SetByLinearInterpolation(initial_ee_W_.at(ee), Vector3d(x,y,z), T);
+    nodes->SetByEeCustomInterpolation(initial_ee_W_.at(ee), Vector3d(x,y,z), T);
 
     nodes->AddStartBound(kPos, {X,Y,Z}, initial_ee_W_.at(ee));
     vars.push_back(nodes);

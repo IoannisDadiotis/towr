@@ -186,6 +186,17 @@ public:
                                 double t_total);
 
   /**
+   * @brief Sets nodes pos/vel interpolated from initial to final position.
+   * This is used to interpolate ee position during swing with a predefined clearance
+   * @param initial_val  value of the first node.
+   * @param final_val  value of the final node.
+   * @param t_total  The total duration to reach final node (to set velocities).
+   */
+  void SetByEeCustomInterpolation(const VectorXd& initial_val,
+                                const VectorXd& final_val,
+                                double t_total);
+
+  /**
    * @brief Restricts the first node in the spline.
    * @param deriv Which derivative (pos,vel,...) should be restricted.
    * @param dimensions Which dimensions (x,y,z) should be restricted.
