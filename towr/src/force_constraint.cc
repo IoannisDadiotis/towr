@@ -94,7 +94,7 @@ ForceConstraint::GetBounds () const
   VecBound bounds;
 
   for (int f_node_id : pure_stance_force_node_ids_) {
-    bounds.push_back(ifopt::Bounds(50.0, fn_max_)); // unilateral forces
+    bounds.push_back(ifopt::Bounds(0.0, fn_max_)); // unilateral forces
     bounds.push_back(ifopt::BoundSmallerZero); // f_t1 <  mu*n
     bounds.push_back(ifopt::BoundGreaterZero); // f_t1 > -mu*n
     bounds.push_back(ifopt::BoundSmallerZero); // f_t2 <  mu*n

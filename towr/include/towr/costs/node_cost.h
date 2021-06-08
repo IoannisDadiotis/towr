@@ -39,11 +39,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 namespace towr {
-
 /**
  * @brief  Assigns a cost to node values.
  *
  * @ingroup Costs
+ *
+ * Inheritance diagram:
+ *  NodeCost -> ifopt::CostTerm -> ifopt::ConstraintSet -> ifopt::Component
  */
 class NodeCost : public ifopt::CostTerm {
 public:
