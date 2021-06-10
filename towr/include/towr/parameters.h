@@ -144,6 +144,7 @@ public:
                         Swing,          ///< sets SwingConstraint
                         BaseRom,        ///< sets BaseMotionConstraint
                         BaseAcc         ///< sets SplineAccConstraint
+//                        BaseAccLimit
   };
   /**
    *  @brief Indentifiers to be used to add certain costs to the optimization

@@ -77,6 +77,8 @@ public:
     */
 
     // alternating stance and swing:     ____-----_____
+    // this code will create problem for biped, monoped
+    // better use GaitGenerator for them
     params.ee_phase_durations_.push_back({1.0, 1.0, 7.0});
     params.ee_phase_durations_.push_back({3.0, 1.0, 5.0});
     params.ee_phase_durations_.push_back({5.0, 1.0, 3.0});
@@ -113,6 +115,8 @@ public:
    */
   void SetIpoptParameters(const TowrCommandMsg& msg) override
   {
+    solver_->SetOption("print_user_options", "yes");
+
     // the HA-L solvers are alot faster, so consider installing and using
     solver_->SetOption("linear_solver", "mumps"); // ma27, ma57
 
@@ -127,10 +131,12 @@ public:
     // This is a great to test if the analytical derivatives implemented in are
     // correct. Some derivatives that are correct are still flagged, showing a
     // deviation of 10e-4, which is fine. What to watch out for is deviations > 10e-2.
+    // solver_->SetOption("derivative_test_tol", 1.0e-2);
     // solver_->SetOption("derivative_test", "first-order");
 
-    solver_->SetOption("max_cpu_time", 100.0);
+    solver_->SetOption("max_cpu_time", 500.0);
     solver_->SetOption("print_level", 5);
+    solver_->SetOption("print_timing_statistics", "yes");
 
     if (msg.play_initialization)
       solver_->SetOption("max_iter", 0);
