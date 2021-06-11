@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <launch>
   <!-- ros_args.launch -->
   <arg name="debug" default="false" doc="run with gdb" />

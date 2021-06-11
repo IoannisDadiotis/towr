@@ -82,6 +82,8 @@ QuadrupedGaitGenerator::SetCombo (Combos combo)
     case C2: SetGaits({Stand, Run3, Run3, Run3, Run3E, Stand}); break; // pace
     case C3: SetGaits({Stand, Hop1, Hop1, Hop1, Hop1E, Stand}); break; // bound
     case C4: SetGaits({Stand, Hop3, Hop3, Hop3, Hop3E, Stand}); break; // gallop
+    case C5: SetGaits({Stand, WalkSlow, Stand}); break; // slow walk for centauro
+
     default: assert(false); std::cout << "Gait not defined\n"; break;
   }
 }
@@ -92,6 +94,7 @@ QuadrupedGaitGenerator::GetGait(Gaits gait) const
   switch (gait) {
     case Stand:   return GetStrideStand();
     case Flight:  return GetStrideFlight();
+    case WalkSlow:   return GetStrideWalkSlow();
     case Walk1:   return GetStrideWalk();
     case Walk2:   return GetStrideWalkOverlap();
     case Walk2E:  return RemoveTransition(GetStrideWalkOverlap());
@@ -154,6 +157,26 @@ QuadrupedGaitGenerator::GetStridePronk () const
   auto phase_contacts =
   {
       BB_, II_, BB_,
+  };
+
+  return std::make_pair(times, phase_contacts);
+}
+
+// Slow walking stride for Centauro
+QuadrupedGaitGenerator::GaitInfo
+QuadrupedGaitGenerator::GetStrideWalkSlow () const
+{
+  double step  = 1.0;
+  double stand = 1.0;
+  auto times =
+  {
+      step, stand, step, stand,
+      step, stand, step, stand,
+  };
+  auto phase_contacts =
+  {
+      bB_, BB_, Bb_, BB_,
+      PB_, BB_, BP_, BB_
   };
 
   return std::make_pair(times, phase_contacts);

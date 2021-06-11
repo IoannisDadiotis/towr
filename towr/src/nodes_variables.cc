@@ -28,6 +28,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ******************************************************************************/
 
 #include <towr/variables/nodes_variables.h>
+#include <iostream>
 
 namespace towr {
 
@@ -140,6 +141,37 @@ NodesVariables::SetByLinearInterpolation(const VectorXd& initial_val,
       if (nvi.deriv_ == kPos) {
         VectorXd pos = initial_val + nvi.id_/static_cast<double>(num_nodes-1)*dp;
         nodes_.at(nvi.id_).at(kPos)(nvi.dim_) = pos(nvi.dim_);
+      }
+
+      if (nvi.deriv_ == kVel) {
+        nodes_.at(nvi.id_).at(kVel)(nvi.dim_) = average_velocity(nvi.dim_);
+      }
+    }
+  }
+}
+
+void
+NodesVariables::SetByEeCustomInterpolation(const VectorXd& initial_val,
+                                         const VectorXd& final_val,
+                                         double t_total)
+{
+  // only set those that are part of optimization variables,
+  // do not overwrite phase-based parameterization
+  VectorXd dp = final_val-initial_val;
+  VectorXd average_velocity = dp / t_total;
+  int num_nodes = nodes_.size();
+
+  for (int idx=0; idx<GetRows(); ++idx) {
+    for (auto nvi : GetNodeValuesInfo(idx)) {
+
+      if (nvi.deriv_ == kPos) {
+          VectorXd pos(3);
+          // if it is the middle knot of the swing phase and the z coordinate
+          if (idx == 7 && nvi.dim_ == 2)
+              pos(nvi.dim_) = std::max(initial_val(nvi.dim_), final_val(nvi.dim_)) + 0.1;
+          else
+              pos(nvi.dim_) = initial_val(nvi.dim_) + nvi.id_/static_cast<double>(num_nodes-1)*dp(nvi.dim_);
+              nodes_.at(nvi.id_).at(kPos)(nvi.dim_) = pos(nvi.dim_);
       }
 
       if (nvi.deriv_ == kVel) {

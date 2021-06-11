@@ -65,7 +65,7 @@ NlpFormulation::GetVariableSets (SplineHolder& spline_holder)
 {
   VariablePtrVec vars;
 
-  auto base_motion = MakeBaseVariables();
+  auto base_motion = MakeBaseVariables(); //MakeBaseLinearVariables();
   vars.insert(vars.end(), base_motion.begin(), base_motion.end());
 
   auto ee_motion = MakeEndeffectorVariables();
@@ -89,7 +89,15 @@ NlpFormulation::GetVariableSets (SplineHolder& spline_holder)
                                ee_force,
                                contact_schedule,
                                params_.IsOptimizeTimings());
-  return vars;
+
+/*    spline_holder = SplineHolderLinear(base_motion.at(0), // linear
+                                    params_.GetBasePolyDurations(),
+                                    ee_motion,
+                                    ee_force,
+                                    contact_schedule,
+                                    params_.IsOptimizeTimings());
+*/
+    return vars;
 }
 
 std::vector<NodesVariables::Ptr>
@@ -124,6 +132,30 @@ NlpFormulation::MakeBaseVariables () const
   return vars;
 }
 
+std::vector<NodesVariables::Ptr>
+NlpFormulation::MakeBaseLinearVariables () const
+{
+  std::vector<NodesVariables::Ptr> vars;
+
+  int n_nodes = params_.GetBasePolyDurations().size() + 1;
+
+  auto spline_lin = std::make_shared<NodesVariablesAll>(n_nodes, k3D, id::base_lin_nodes);
+
+  double x = final_base_.lin.p().x();
+  double y = final_base_.lin.p().y();
+  double z = terrain_->GetHeight(x,y) - model_.kinematic_model_->GetNominalStanceInBase().front().z();
+  Vector3d final_pos(x, y, z);
+
+  spline_lin->SetByLinearInterpolation(initial_base_.lin.p(), final_pos, params_.GetTotalTime());
+  spline_lin->AddStartBound(kPos, {X,Y,Z}, initial_base_.lin.p());
+  spline_lin->AddStartBound(kVel, {X,Y,Z}, initial_base_.lin.v());
+  spline_lin->AddFinalBound(kPos, params_.bounds_final_lin_pos_,   final_base_.lin.p());
+  spline_lin->AddFinalBound(kVel, params_.bounds_final_lin_vel_, final_base_.lin.v());
+  vars.push_back(spline_lin);
+
+  return vars;
+}
+
 std::vector<NodesVariablesPhaseBased::Ptr>
 NlpFormulation::MakeEndeffectorVariables () const
 {
@@ -146,7 +178,8 @@ NlpFormulation::MakeEndeffectorVariables () const
     double x = final_ee_pos_W.x();
     double y = final_ee_pos_W.y();
     double z = terrain_->GetHeight(x,y);
-    nodes->SetByLinearInterpolation(initial_ee_W_.at(ee), Vector3d(x,y,z), T);
+    //nodes->SetByLinearInterpolation(initial_ee_W_.at(ee), Vector3d(x,y,z), T);
+    nodes->SetByEeCustomInterpolation(initial_ee_W_.at(ee), Vector3d(x,y,z), T);
 
     nodes->AddStartBound(kPos, {X,Y,Z}, initial_ee_W_.at(ee));
     vars.push_back(nodes);
@@ -347,6 +380,8 @@ NlpFormulation::GetCost(const Parameters::CostName& name, double weight) const
   switch (name) {
     case Parameters::ForcesCostID:   return MakeForcesCost(weight);
     case Parameters::EEMotionCostID: return MakeEEMotionCost(weight);
+    case Parameters::BaseVelLinCostID: return MakeBaseVelLinCost(weight);
+    case Parameters::BaseVelAngCostID: return MakeBaseVelAngCost(weight);
     default: throw std::runtime_error("cost not defined!");
   }
 }
@@ -357,8 +392,11 @@ NlpFormulation::MakeForcesCost(double weight) const
   CostPtrVec cost;
 
   for (int ee=0; ee<params_.GetEECount(); ee++)
-    cost.push_back(std::make_shared<NodeCost>(id::EEForceNodes(ee), kPos, Z, weight));
-
+  {
+    cost.push_back(std::make_shared<NodeCost>(id::EEForceNodes(ee), kPos, X, weight));
+    cost.push_back(std::make_shared<NodeCost>(id::EEForceNodes(ee), kPos, Y, weight));
+//    cost.push_back(std::make_shared<NodeCost>(id::EEForceNodes(ee), kPos, Z, weight));
+  }
   return cost;
 }
 
@@ -370,7 +408,29 @@ NlpFormulation::MakeEEMotionCost(double weight) const
   for (int ee=0; ee<params_.GetEECount(); ee++) {
     cost.push_back(std::make_shared<NodeCost>(id::EEMotionNodes(ee), kVel, X, weight));
     cost.push_back(std::make_shared<NodeCost>(id::EEMotionNodes(ee), kVel, Y, weight));
+    cost.push_back(std::make_shared<NodeCost>(id::EEMotionNodes(ee), kVel, Z, weight));
   }
+
+  return cost;
+}
+
+NlpFormulation::CostPtrVec NlpFormulation::MakeBaseVelLinCost(double weight) const
+{
+  CostPtrVec cost;
+  cost.push_back(std::make_shared<NodeCost>(id::base_lin_nodes, kVel, X, weight));
+  cost.push_back(std::make_shared<NodeCost>(id::base_lin_nodes, kVel, Y, weight));
+  cost.push_back(std::make_shared<NodeCost>(id::base_lin_nodes, kVel, Z, weight));
+
+  return cost;
+}
+
+NlpFormulation::CostPtrVec NlpFormulation::MakeBaseVelAngCost(double weight) const
+{
+  CostPtrVec cost;
+
+  cost.push_back(std::make_shared<NodeCost>(id::base_ang_nodes, kVel, X, weight));
+  cost.push_back(std::make_shared<NodeCost>(id::base_ang_nodes, kVel, Y, weight));
+  cost.push_back(std::make_shared<NodeCost>(id::base_ang_nodes, kVel, Z, weight));
 
   return cost;
 }

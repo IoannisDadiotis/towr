@@ -67,46 +67,26 @@ public:
     // Instead of manually defining the initial durations for each foot and
     // step, for convenience we use a GaitGenerator with some predefined gaits
     // for a variety of robots (walk, trot, pace, ...).
-    /*auto gait_gen_ = GaitGenerator::MakeGaitGenerator(n_ee);
+    auto gait_gen_ = GaitGenerator::MakeGaitGenerator(n_ee);
     auto id_gait   = static_cast<GaitGenerator::Combos>(msg.gait);
     gait_gen_->SetCombo(id_gait);
     for (int ee=0; ee<n_ee; ++ee) {
       params.ee_phase_durations_.push_back(gait_gen_->GetPhaseDurations(msg.total_duration, ee));
       params.ee_in_contact_at_start_.push_back(gait_gen_->IsInContactAtStart(ee));
     }
-    */
 
-    // alternating stance and swing:     ____-----_____
-    // this code will create problem for biped, monoped
-    // better use GaitGenerator for them
-    params.ee_phase_durations_.push_back({1.0, 1.0, 7.0});
-    params.ee_phase_durations_.push_back({3.0, 1.0, 5.0});
-    params.ee_phase_durations_.push_back({5.0, 1.0, 3.0});
-    params.ee_phase_durations_.push_back({7.0, 1.0, 1.0});
+    /* Here you can also add other constraints or change parameters
+     * otherwise the params have the default values from parameters.cc file
+     */
 
-    params.ee_in_contact_at_start_.push_back(true);
-    params.ee_in_contact_at_start_.push_back(true);
-    params.ee_in_contact_at_start_.push_back(true);
-    params.ee_in_contact_at_start_.push_back(true);
-
-    // constructs optimization variables
-    params.duration_base_polynomial_ = 0.3;
-    params.force_polynomials_per_stance_phase_ = 3;
-    params.ee_polynomials_per_swing_phase_ = 2; // so step can at least lift leg
-
-    // parameters related to specific constraints (only used when it is added as well)
-    params.force_limit_in_normal_direction_ = 1000;
-    params.dt_constraint_range_of_motion_ = 0.3;
-    params.dt_constraint_dynamic_ = 0.3;
-    //params_.dt_constraint_base_motion_ = formulation.params_.duration_base_polynomial_/4.; // only for base RoM constraint if added
+    // params.constraints_.push_back(Parameters::BaseRom);
+    params.dt_constraint_dynamic_ = 0.2;
 
     // increases optimization time, but sometimes helps find a solution for
     // more difficult terrain.
     if (msg.optimize_phase_durations)
-    {
-        //params.bound_phase_duration_ = std::make_pair(5.0, 5.0);
-        params.OptimizePhaseDurations();
-    }
+      params.OptimizePhaseDurations();
+
     return params;
   }
 
@@ -115,8 +95,6 @@ public:
    */
   void SetIpoptParameters(const TowrCommandMsg& msg) override
   {
-    solver_->SetOption("print_user_options", "yes");
-
     // the HA-L solvers are alot faster, so consider installing and using
     solver_->SetOption("linear_solver", "mumps"); // ma27, ma57
 
@@ -131,12 +109,10 @@ public:
     // This is a great to test if the analytical derivatives implemented in are
     // correct. Some derivatives that are correct are still flagged, showing a
     // deviation of 10e-4, which is fine. What to watch out for is deviations > 10e-2.
-    // solver_->SetOption("derivative_test_tol", 1.0e-2);
     // solver_->SetOption("derivative_test", "first-order");
 
-    solver_->SetOption("max_cpu_time", 500.0);
+    solver_->SetOption("max_cpu_time", 40.0);
     solver_->SetOption("print_level", 5);
-    solver_->SetOption("print_timing_statistics", "yes");
 
     if (msg.play_initialization)
       solver_->SetOption("max_iter", 0);

@@ -96,7 +96,6 @@ public:
   /** @brief The ifopt costs to tune the motion. */
   ContraintPtrVec GetCosts() const;
 
-
   BaseState initial_base_;
   BaseState final_base_;
   EEPos  initial_ee_W_;
@@ -107,6 +106,8 @@ public:
 private:
   // variables
   std::vector<NodesVariables::Ptr> MakeBaseVariables() const;
+  std::vector<NodesVariables::Ptr> MakeBaseLinearVariables () const;
+
   std::vector<NodesVariablesPhaseBased::Ptr> MakeEndeffectorVariables() const;
   std::vector<NodesVariablesPhaseBased::Ptr> MakeForceVariables() const;
   std::vector<PhaseDurations::Ptr> MakeContactScheduleVariables() const;
@@ -127,6 +128,8 @@ private:
   CostPtrVec GetCost(const Parameters::CostName& id, double weight) const;
   CostPtrVec MakeForcesCost(double weight) const;
   CostPtrVec MakeEEMotionCost(double weight) const;
+  CostPtrVec MakeBaseVelLinCost(double weight) const;
+  CostPtrVec MakeBaseVelAngCost(double weight) const;
 };
 
 } /* namespace towr */

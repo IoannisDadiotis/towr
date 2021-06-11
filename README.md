@@ -44,7 +44,7 @@ In case these don't yet exist for your distro, there are two ways to build this 
 * [Option 2](#towr-ros-with-catkin) (recommended): core library & GUI & ROS-rviz-visualization built with [catkin] and [ROS]. 
 
 
-###### <a name="towr-with-cmake"></a> Building with CMake
+#### <a name="towr-with-cmake"></a> Building with CMake
 * Install dependencies [CMake], [Eigen], [Ipopt]:
   ```bash
   sudo apt-get install cmake libeigen3-dev coinor-libipopt-dev

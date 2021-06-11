@@ -43,6 +43,8 @@ MonopedGaitGenerator::SetCombo (Combos combo)
     case C2: SetGaits({Stand, Hop1, Hop1, Hop1, Hop1, Stand});       break;
     case C3: SetGaits({Stand, Hop2, Hop2, Hop2, Stand});             break;
     case C4: SetGaits({Stand, Hop2, Hop2, Hop2, Hop2, Hop2, Stand}); break;
+    case C5: SetGaits({Stand, Hop1, Stand}); break; // slow walk for centauro
+
     default: assert(false); std::cout << "Gait not defined\n";       break;
   }
 }

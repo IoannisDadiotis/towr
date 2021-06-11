@@ -63,6 +63,18 @@ target_link_libraries(towr_ros_app
   ${PROJECT_NAME}
 )
 
+## An example executable that runs TOWR - centauro
+add_executable(towr_ros_app_centauro
+  src/towr_ros_app_centauro.cc
+)
+add_dependencies(towr_ros_app_centauro
+  ${PROJECT_NAME}_gencpp
+)
+target_link_libraries(towr_ros_app_centauro
+  ${catkin_LIBRARIES}
+  ${PROJECT_NAME}
+)
+
 
 ## Keyboard interfaces (ncurses)
 find_package(Curses REQUIRED)
@@ -125,6 +137,7 @@ target_link_libraries(rosbag_geom_msg_extractor
 # Mark library for installation
 install(
   TARGETS towr_ros_app
+          towr_ros_app_centauro
           towr_user_interface
           rviz_terrain_publisher
           goal_pose_publisher
