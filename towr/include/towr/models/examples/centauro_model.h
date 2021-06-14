@@ -61,21 +61,21 @@ public:
 /**
  * @brief The Dynamics of the quadruped robot Centauro.
  */
-
+/*
 class CentauroDynamicModel : public SRBD_const_momentum {
 public:
   CentauroDynamicModel()
   : SRBD_const_momentum(95, 4) {}
 };
-/*
+*/
 class CentauroDynamicModel : public SingleRigidBodyDynamics {
 public:
   CentauroDynamicModel()
   : SingleRigidBodyDynamics(95,
-                    0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                    16.9511, 19.0646, 14.115, -0.0099, -3.2294, -0.0048,
                     4) {}
 };
-*/
+
 
 } // namespace towr
 
