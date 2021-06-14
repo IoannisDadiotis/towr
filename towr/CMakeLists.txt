@@ -106,23 +106,13 @@ if (TARGET GTest::GTest) # only build when modern targets exists
   add_test(${PROJECT_NAME}-test ${PROJECT_NAME}-test)
 endif()
 
-add_executable(${PROJECT_NAME}-example_centauro
-  test/centauro_example.cc
-)
-target_link_libraries(${PROJECT_NAME}-example_centauro
-  PRIVATE
-    ${PROJECT_NAME}
-    ifopt::ifopt_ipopt
-)
-add_test(${PROJECT_NAME}-example_centauro ${PROJECT_NAME}-example_centauro)
-
 #############
 ## Install ##
 #############
 include(GNUInstallDirs) # for correct libraries locations across platforms
 set(config_package_location "share/${PROJECT_NAME}/cmake") # for .cmake find-scripts installs
 install(
-  TARGETS ${PROJECT_NAME} ${PROJECT_NAME}-example ${PROJECT_NAME}-example_centauro
+  TARGETS ${PROJECT_NAME} ${PROJECT_NAME}-example
   EXPORT ${PROJECT_NAME}-targets
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

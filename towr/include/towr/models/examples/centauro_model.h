@@ -62,10 +62,10 @@ public:
  * @brief The Dynamics of the quadruped robot Centauro.
  */
 
-class CentauroDynamicModel : public SRBD_zero_momentum {
+class CentauroDynamicModel : public SRBD_const_momentum {
 public:
   CentauroDynamicModel()
-  : SRBD_zero_momentum(95, 4) {}
+  : SRBD_const_momentum(95, 4) {}
 };
 /*
 class CentauroDynamicModel : public SingleRigidBodyDynamics {

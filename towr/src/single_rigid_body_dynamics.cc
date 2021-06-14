@@ -191,21 +191,21 @@ SingleRigidBodyDynamics::GetJacobianWrtEEPos (const Jac& jac_ee_pos, EE ee) cons
   return jac;
 }
 
-// ------- SRBD model with zero angular momentum rate of change ----------
+// ------- SRBD model with constant angular momentum ----------
 // builds a cross product matrix out of "in", so in x v = X(in)*v
-SRBD_zero_momentum::SRBD_zero_momentum (double mass, int ee_count) // no inertia tensor
-   : SRBD_zero_momentum(mass, BuildInertiaTensor(0.0, 0.0, 0.0, 0.0, 0.0, 0.0), ee_count)
+SRBD_const_momentum::SRBD_const_momentum (double mass, int ee_count) // no inertia tensor
+   : SRBD_const_momentum(mass, BuildInertiaTensor(0.0, 0.0, 0.0, 0.0, 0.0, 0.0), ee_count)
 {
 }
 
-SRBD_zero_momentum::SRBD_zero_momentum (double mass, const Eigen::Matrix3d& inertia_b,
+SRBD_const_momentum::SRBD_const_momentum (double mass, const Eigen::Matrix3d& inertia_b,
                                       int ee_count)
     :DynamicModel(mass, ee_count)
 {
   I_b = inertia_b.sparseView();
 }
 
-SRBD_zero_momentum::BaseAcc SRBD_zero_momentum::GetDynamicViolation () const
+SRBD_const_momentum::BaseAcc SRBD_const_momentum::GetDynamicViolation () const
 {
   // https://en.wikipedia.org/wiki/Newton%E2%80%93Euler_equations
 
@@ -229,7 +229,7 @@ SRBD_zero_momentum::BaseAcc SRBD_zero_momentum::GetDynamicViolation () const
   return acc;
 }
 
-SRBD_zero_momentum::Jac SRBD_zero_momentum::GetJacobianWrtBaseLin (const Jac& jac_pos_base_lin,
+SRBD_const_momentum::Jac SRBD_const_momentum::GetJacobianWrtBaseLin (const Jac& jac_pos_base_lin,
                                         const Jac& jac_acc_base_lin) const
 {
   // build the com jacobian
@@ -248,7 +248,7 @@ SRBD_zero_momentum::Jac SRBD_zero_momentum::GetJacobianWrtBaseLin (const Jac& ja
   return jac;
 }
 
-SRBD_zero_momentum::Jac SRBD_zero_momentum::GetJacobianWrtBaseAng (const EulerConverter& base_euler,
+SRBD_const_momentum::Jac SRBD_const_momentum::GetJacobianWrtBaseAng (const EulerConverter& base_euler,
                                                                     double t) const
 {
   // (derivative of omega)
@@ -260,7 +260,7 @@ SRBD_zero_momentum::Jac SRBD_zero_momentum::GetJacobianWrtBaseAng (const EulerCo
   return jac;
 }
 
-SRBD_zero_momentum::Jac SRBD_zero_momentum::GetJacobianWrtForce (const Jac& jac_force, EE ee) const
+SRBD_const_momentum::Jac SRBD_const_momentum::GetJacobianWrtForce (const Jac& jac_force, EE ee) const
 {
   Vector3d r = com_pos_ - ee_pos_.at(ee);
   Jac jac_tau = -Cross(r)*jac_force;
@@ -273,7 +273,7 @@ SRBD_zero_momentum::Jac SRBD_zero_momentum::GetJacobianWrtForce (const Jac& jac_
   return jac;
 }
 
-SRBD_zero_momentum::Jac SRBD_zero_momentum::GetJacobianWrtEEPos (const Jac& jac_ee_pos, EE ee) const
+SRBD_const_momentum::Jac SRBD_const_momentum::GetJacobianWrtEEPos (const Jac& jac_ee_pos, EE ee) const
 {
   Vector3d f = ee_force_.at(ee);
   Jac jac_tau = Cross(f)*(-jac_ee_pos);

@@ -168,14 +168,16 @@ QuadrupedGaitGenerator::GetStrideWalkSlow () const
 {
   double step  = 1.0;
   double stand = 1.0;
+
+  // start with stand
   auto times =
   {
-      step, stand, step, stand,
+      stand, step, stand, step, stand,
       step, stand, step, stand,
   };
   auto phase_contacts =
   {
-      bB_, BB_, Bb_, BB_,
+      BB_, bB_, BB_, Bb_, BB_,
       PB_, BB_, BP_, BB_
   };
 

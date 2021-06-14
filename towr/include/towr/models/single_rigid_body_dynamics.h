@@ -95,8 +95,8 @@ private:
   Eigen::SparseMatrix<double, Eigen::RowMajor> I_b;
 };
 
-// ---- SRBD with zero angular momentum rate of change ------
-class SRBD_zero_momentum : public DynamicModel {
+// ---- SRBD with constant angular momentum ------
+class SRBD_const_momentum : public DynamicModel {
 public:
   /**
    * @brief Constructs a specific model.
@@ -106,7 +106,7 @@ public:
    *                     This matrix maps angular accelerations expressed in
    *                     base frame to moments in base frame.
    */
-  SRBD_zero_momentum (double mass, const Eigen::Matrix3d& inertia_b, int ee_count);
+  SRBD_const_momentum (double mass, const Eigen::Matrix3d& inertia_b, int ee_count);
 
   /**
    * @brief Constructs a specific model.
@@ -114,9 +114,9 @@ public:
    * @param I..       Elements of the 3x3 Inertia matrix
    * @param ee_count  Number of endeffectors/forces.
    */
-  SRBD_zero_momentum (double mass, int ee_count);
+  SRBD_const_momentum (double mass, int ee_count);
 
-  virtual ~SRBD_zero_momentum () = default;
+  virtual ~SRBD_const_momentum () = default;
 
   BaseAcc GetDynamicViolation() const override;
 
