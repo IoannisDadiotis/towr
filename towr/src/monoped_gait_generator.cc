@@ -43,6 +43,7 @@ MonopedGaitGenerator::SetCombo (Combos combo)
     case C2: SetGaits({Stand, Hop1, Hop1, Hop1, Hop1, Stand});       break;
     case C3: SetGaits({Stand, Hop2, Hop2, Hop2, Stand});             break;
     case C4: SetGaits({Stand, Hop2, Hop2, Hop2, Hop2, Hop2, Stand}); break;
+    case C5: SetGaits({Stand, Hop1, Stand}); break;     // for compiling purposes
     default: assert(false); std::cout << "Gait not defined\n";       break;
   }
 }

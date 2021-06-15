@@ -81,8 +81,10 @@ public:
     // increases optimization time, but sometimes helps find a solution for
     // more difficult terrain.
     if (msg.optimize_phase_durations)
-      params.OptimizePhaseDurations();
-
+    {
+        //params.bound_phase_duration_ = std::make_pair(5.0, 5.0);
+        params.OptimizePhaseDurations();
+    }
     return params;
   }
 
@@ -91,6 +93,7 @@ public:
    */
   void SetIpoptParameters(const TowrCommandMsg& msg) override
   {
+    solver_->SetOption("print_user_options", "yes");
     // the HA-L solvers are alot faster, so consider installing and using
     solver_->SetOption("linear_solver", "mumps"); // ma27, ma57
 
@@ -107,8 +110,9 @@ public:
     // deviation of 10e-4, which is fine. What to watch out for is deviations > 10e-2.
     // solver_->SetOption("derivative_test", "first-order");
 
-    solver_->SetOption("max_cpu_time", 40.0);
+    solver_->SetOption("max_cpu_time", 250.0);
     solver_->SetOption("print_level", 5);
+    solver_->SetOption("print_timing_statistics", "yes");
 
     if (msg.play_initialization)
       solver_->SetOption("max_iter", 0);
