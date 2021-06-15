@@ -40,6 +40,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <towr/constraints/terrain_constraint.h>
 #include <towr/constraints/total_duration_constraint.h>
 #include <towr/constraints/spline_acc_constraint.h>
+#include <towr/constraints/base_acc_limits_constraint.h>
 
 #include <towr/costs/node_cost.h>
 #include <towr/variables/nodes_variables_all.h>
@@ -348,6 +349,8 @@ NlpFormulation::GetCost(const Parameters::CostName& name, double weight) const
   switch (name) {
     case Parameters::ForcesCostID:   return MakeForcesCost(weight);
     case Parameters::EEMotionCostID: return MakeEEMotionCost(weight);
+    case Parameters::BaseVelLinCostID: return MakeBaseVelLinCost(weight);
+    case Parameters::BaseVelAngCostID: return MakeBaseVelAngCost(weight);
     default: throw std::runtime_error("cost not defined!");
   }
 }
@@ -376,4 +379,24 @@ NlpFormulation::MakeEEMotionCost(double weight) const
   return cost;
 }
 
+NlpFormulation::CostPtrVec NlpFormulation::MakeBaseVelLinCost(double weight) const
+{
+  CostPtrVec cost;
+  cost.push_back(std::make_shared<NodeCost>(id::base_lin_nodes, kVel, X, weight));
+  cost.push_back(std::make_shared<NodeCost>(id::base_lin_nodes, kVel, Y, weight));
+  cost.push_back(std::make_shared<NodeCost>(id::base_lin_nodes, kVel, Z, weight));
+
+  return cost;
+}
+
+NlpFormulation::CostPtrVec NlpFormulation::MakeBaseVelAngCost(double weight) const
+{
+  CostPtrVec cost;
+
+  cost.push_back(std::make_shared<NodeCost>(id::base_ang_nodes, kVel, X, weight));
+  cost.push_back(std::make_shared<NodeCost>(id::base_ang_nodes, kVel, Y, weight));
+  cost.push_back(std::make_shared<NodeCost>(id::base_ang_nodes, kVel, Z, weight));
+
+  return cost;
+}
 } /* namespace towr */
