@@ -191,4 +191,98 @@ SingleRigidBodyDynamics::GetJacobianWrtEEPos (const Jac& jac_ee_pos, EE ee) cons
   return jac;
 }
 
+// ------- SRBD model with constant angular momentum ----------
+// builds a cross product matrix out of "in", so in x v = X(in)*v
+SRBD_const_momentum::SRBD_const_momentum (double mass, int ee_count) // no inertia tensor
+   : SRBD_const_momentum(mass, BuildInertiaTensor(0.0, 0.0, 0.0, 0.0, 0.0, 0.0), ee_count)
+{
+}
+
+SRBD_const_momentum::SRBD_const_momentum (double mass, const Eigen::Matrix3d& inertia_b,
+                                      int ee_count)
+    :DynamicModel(mass, ee_count)
+{
+  I_b = inertia_b.sparseView();
+}
+
+SRBD_const_momentum::BaseAcc SRBD_const_momentum::GetDynamicViolation () const
+{
+  // https://en.wikipedia.org/wiki/Newton%E2%80%93Euler_equations
+
+  Vector3d f_sum, tau_sum;
+  f_sum.setZero(); tau_sum.setZero();
+
+  for (int ee=0; ee<ee_pos_.size(); ++ee) {
+    Vector3d f = ee_force_.at(ee);
+    tau_sum += f.cross(com_pos_ - ee_pos_.at(ee));
+    f_sum   += f;
+  }
+
+  // express inertia matrix in world frame based on current body orientation
+  //Jac I_w = w_R_b_.sparseView() * I_b * w_R_b_.transpose().sparseView();
+
+  BaseAcc acc;
+  acc.segment(AX, k3D) = - tau_sum; // zero rate of angular momentum
+  acc.segment(LX, k3D) = m()*com_acc_
+                         - f_sum
+                         - Vector3d(0.0, 0.0, -m()*g()); // gravity force
+  return acc;
+}
+
+SRBD_const_momentum::Jac SRBD_const_momentum::GetJacobianWrtBaseLin (const Jac& jac_pos_base_lin,
+                                        const Jac& jac_acc_base_lin) const
+{
+  // build the com jacobian
+  int n = jac_pos_base_lin.cols();
+
+  Jac jac_tau_sum(k3D, n);
+  for (const Vector3d& f : ee_force_) {
+    Jac jac_tau = Cross(f)*jac_pos_base_lin;
+    jac_tau_sum += jac_tau;
+  }
+
+  Jac jac(k6D, n);
+  jac.middleRows(AX, k3D) = -jac_tau_sum;
+  jac.middleRows(LX, k3D) = m()*jac_acc_base_lin;
+
+  return jac;
+}
+
+SRBD_const_momentum::Jac SRBD_const_momentum::GetJacobianWrtBaseAng (const EulerConverter& base_euler,
+                                                                    double t) const
+{
+  // (derivative of omega)
+  Jac jac_ang_vel = base_euler.GetDerivOfAngVelWrtEulerNodes(t);
+
+  int n = jac_ang_vel.cols();
+  Jac jac(k6D, n);
+
+  return jac;
+}
+
+SRBD_const_momentum::Jac SRBD_const_momentum::GetJacobianWrtForce (const Jac& jac_force, EE ee) const
+{
+  Vector3d r = com_pos_ - ee_pos_.at(ee);
+  Jac jac_tau = -Cross(r)*jac_force;
+
+  int n = jac_force.cols();
+  Jac jac(k6D, n);
+  jac.middleRows(AX, k3D) = -jac_tau;
+  jac.middleRows(LX, k3D) = -jac_force;
+
+  return jac;
+}
+
+SRBD_const_momentum::Jac SRBD_const_momentum::GetJacobianWrtEEPos (const Jac& jac_ee_pos, EE ee) const
+{
+  Vector3d f = ee_force_.at(ee);
+  Jac jac_tau = Cross(f)*(-jac_ee_pos);
+
+  Jac jac(k6D, jac_tau.cols());
+  jac.middleRows(AX, k3D) = -jac_tau;
+
+  // linear dynamics don't depend on endeffector position.
+  return jac;
+}
+
 } /* namespace towr */

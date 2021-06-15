@@ -95,6 +95,85 @@ private:
   Eigen::SparseMatrix<double, Eigen::RowMajor> I_b;
 };
 
+// ---- SRBD with zero angular momentum rate of change ------
+class SRBD_zero_momentum : public DynamicModel {
+public:
+  /**
+   * @brief Constructs a specific model.
+   * @param mass         The mass of the robot.
+   * @param ee_count     The number of endeffectors/forces.
+   * @param inertia_b    The elements of the 3x3 Inertia matrix around the CoM.
+   *                     This matrix maps angular accelerations expressed in
+   *                     base frame to moments in base frame.
+   */
+  SRBD_zero_momentum (double mass, const Eigen::Matrix3d& inertia_b, int ee_count);
+
+  /**
+   * @brief Constructs a specific model.
+   * @param mass      Mass of the robot.
+   * @param I..       Elements of the 3x3 Inertia matrix
+   * @param ee_count  Number of endeffectors/forces.
+   */
+  SRBD_zero_momentum (double mass, int ee_count);
+
+  virtual ~SRBD_zero_momentum () = default;
+
+  BaseAcc GetDynamicViolation() const override;
+
+  Jac GetJacobianWrtBaseLin(const Jac& jac_base_lin_pos,
+                            const Jac& jac_acc_base_lin) const override;
+  Jac GetJacobianWrtBaseAng(const EulerConverter& base_angular,
+                            double t) const override;
+  Jac GetJacobianWrtForce(const Jac& jac_force, EE) const override;
+
+  Jac GetJacobianWrtEEPos(const Jac& jac_ee_pos, EE) const override;
+
+private:
+  /** Inertia of entire robot around the CoM expressed in a frame anchored
+   *  in the base.
+   */
+  Eigen::SparseMatrix<double, Eigen::RowMajor> I_b;
+};
+
+// ---- SRBD with constant angular momentum ------
+class SRBD_const_momentum : public DynamicModel {
+public:
+  /**
+   * @brief Constructs a specific model.
+   * @param mass         The mass of the robot.
+   * @param ee_count     The number of endeffectors/forces.
+   * @param inertia_b    The elements of the 3x3 Inertia matrix around the CoM.
+   *                     This matrix maps angular accelerations expressed in
+   *                     base frame to moments in base frame.
+   */
+  SRBD_const_momentum (double mass, const Eigen::Matrix3d& inertia_b, int ee_count);
+
+  /**
+   * @brief Constructs a specific model.
+   * @param mass      Mass of the robot.
+   * @param I..       Elements of the 3x3 Inertia matrix
+   * @param ee_count  Number of endeffectors/forces.
+   */
+  SRBD_const_momentum (double mass, int ee_count);
+
+  virtual ~SRBD_const_momentum () = default;
+
+  BaseAcc GetDynamicViolation() const override;
+
+  Jac GetJacobianWrtBaseLin(const Jac& jac_base_lin_pos,
+                            const Jac& jac_acc_base_lin) const override;
+  Jac GetJacobianWrtBaseAng(const EulerConverter& base_angular,
+                            double t) const override;
+  Jac GetJacobianWrtForce(const Jac& jac_force, EE) const override;
+
+  Jac GetJacobianWrtEEPos(const Jac& jac_ee_pos, EE) const override;
+
+private:
+  /** Inertia of entire robot around the CoM expressed in a frame anchored
+   *  in the base.
+   */
+  Eigen::SparseMatrix<double, Eigen::RowMajor> I_b;
+};
 
 } /* namespace towr */
 
