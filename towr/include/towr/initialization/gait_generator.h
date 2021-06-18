@@ -61,8 +61,8 @@ public:
    * @brief Predefined strides, each with a different gait diagram.
    */
   enum Gaits  {Stand=0, Flight,
-               WalkSlow, Walk1, Walk2, Walk2E,
-               Run2, Run2E, Run1, Run1E, Run3, Run3E,
+               Walk1, Walk2, Walk2E,
+               WalkSlow, Run2, Run2E, Run1, Run1E, Run3, Run3E,
                Hop1, Hop1E, Hop2, Hop3, Hop3E, Hop5, Hop5E,
                GAIT_COUNT};
 

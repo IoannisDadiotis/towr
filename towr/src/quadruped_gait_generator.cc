@@ -83,7 +83,6 @@ QuadrupedGaitGenerator::SetCombo (Combos combo)
     case C3: SetGaits({Stand, Hop1, Hop1, Hop1, Hop1E, Stand}); break; // bound
     case C4: SetGaits({Stand, Hop3, Hop3, Hop3, Hop3E, Stand}); break; // gallop
     case C5: SetGaits({Stand, WalkSlow, Stand}); break; // slow walk for centauro
-
     default: assert(false); std::cout << "Gait not defined\n"; break;
   }
 }
@@ -161,6 +160,7 @@ QuadrupedGaitGenerator::GetStridePronk () const
 
   return std::make_pair(times, phase_contacts);
 }
+
 
 // Slow walking stride for Centauro
 QuadrupedGaitGenerator::GaitInfo

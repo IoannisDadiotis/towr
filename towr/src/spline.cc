@@ -45,7 +45,8 @@ Spline::Spline(const VecTimes& poly_durations, int n_dim)
   UpdatePolynomialCoeff();
 }
 
-int Spline::GetSegmentID(double t_global, const VecTimes& durations)
+int
+Spline::GetSegmentID(double t_global, const VecTimes& durations)
 {
   double eps = 1e-10; // double precision
   assert(t_global >= 0.0);

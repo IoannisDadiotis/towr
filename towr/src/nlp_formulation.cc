@@ -40,6 +40,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <towr/constraints/terrain_constraint.h>
 #include <towr/constraints/total_duration_constraint.h>
 #include <towr/constraints/spline_acc_constraint.h>
+#include <towr/constraints/base_acc_limits_constraint.h>
 
 #include <towr/costs/node_cost.h>
 #include <towr/variables/nodes_variables_all.h>
@@ -91,13 +92,13 @@ NlpFormulation::GetVariableSets (SplineHolder& spline_holder)
                                params_.IsOptimizeTimings());
 
 /*    spline_holder = SplineHolderLinear(base_motion.at(0), // linear
-                                    params_.GetBasePolyDurations(),
-                                    ee_motion,
-                                    ee_force,
-                                    contact_schedule,
-                                    params_.IsOptimizeTimings());
-*/
-    return vars;
+ *                                   params_.GetBasePolyDurations(),
+ *                                   ee_motion,
+ *                                   ee_force,
+ *                                   contact_schedule,
+ *                                   params_.IsOptimizeTimings());
+ */
+  return vars;
 }
 
 std::vector<NodesVariables::Ptr>
@@ -132,7 +133,7 @@ NlpFormulation::MakeBaseVariables () const
   return vars;
 }
 
-std::vector<NodesVariables::Ptr>
+/*std::vector<NodesVariables::Ptr>
 NlpFormulation::MakeBaseLinearVariables () const
 {
   std::vector<NodesVariables::Ptr> vars;
@@ -155,7 +156,7 @@ NlpFormulation::MakeBaseLinearVariables () const
 
   return vars;
 }
-
+*/
 std::vector<NodesVariablesPhaseBased::Ptr>
 NlpFormulation::MakeEndeffectorVariables () const
 {
@@ -393,9 +394,9 @@ NlpFormulation::MakeForcesCost(double weight) const
 
   for (int ee=0; ee<params_.GetEECount(); ee++)
   {
-    cost.push_back(std::make_shared<NodeCost>(id::EEForceNodes(ee), kPos, X, weight));
-    cost.push_back(std::make_shared<NodeCost>(id::EEForceNodes(ee), kPos, Y, weight));
-//    cost.push_back(std::make_shared<NodeCost>(id::EEForceNodes(ee), kPos, Z, weight));
+//    cost.push_back(std::make_shared<NodeCost>(id::EEForceNodes(ee), kPos, X, weight));
+//    cost.push_back(std::make_shared<NodeCost>(id::EEForceNodes(ee), kPos, Y, weight));
+    cost.push_back(std::make_shared<NodeCost>(id::EEForceNodes(ee), kPos, Z, weight));
   }
   return cost;
 }
@@ -408,7 +409,7 @@ NlpFormulation::MakeEEMotionCost(double weight) const
   for (int ee=0; ee<params_.GetEECount(); ee++) {
     cost.push_back(std::make_shared<NodeCost>(id::EEMotionNodes(ee), kVel, X, weight));
     cost.push_back(std::make_shared<NodeCost>(id::EEMotionNodes(ee), kVel, Y, weight));
-    cost.push_back(std::make_shared<NodeCost>(id::EEMotionNodes(ee), kVel, Z, weight));
+//    cost.push_back(std::make_shared<NodeCost>(id::EEMotionNodes(ee), kVel, Z, weight));
   }
 
   return cost;

@@ -47,7 +47,7 @@ d = S.d;
 
 syms t;
 
-k = subs(pos)
+%k = subs(pos)
 %% Derivative of pos, vel and acc w.r.t the node values and duration
 % position
 jac_p = jacobian(subs(pos), [p0 v0 p1 v1 T]);

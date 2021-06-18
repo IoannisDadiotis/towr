@@ -30,7 +30,6 @@ add_library(${PROJECT_NAME} SHARED
   src/dynamic_model.cc
   src/single_rigid_body_dynamics.cc
   # constraints
-  src/base_acc_limits_constraint.cc
   src/time_discretization_constraint.cc
   src/base_motion_constraint.cc
   src/terrain_constraint.cc
@@ -41,6 +40,7 @@ add_library(${PROJECT_NAME} SHARED
   src/range_of_motion_constraint.cc
   src/spline_acc_constraint.cc
   src/linear_constraint.cc
+  src/base_acc_limits_constraint.cc
   # costs
   src/node_cost.cc
   src/soft_constraint.cc
@@ -49,7 +49,6 @@ add_library(${PROJECT_NAME} SHARED
   src/monoped_gait_generator.cc
   src/biped_gait_generator.cc
   src/quadruped_gait_generator.cc
-
   # terrain
   src/height_map_examples.cc
   src/height_map.cc

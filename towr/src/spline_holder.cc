@@ -61,7 +61,7 @@ SplineHolder::SplineHolder (NodesVariables::Ptr base_lin_nodes,
 }
 
 // Constructor for only linear base pose (not used until now)
-SplineHolder::SplineHolder (NodesVariables::Ptr base_lin_nodes,
+/*SplineHolder::SplineHolder (NodesVariables::Ptr base_lin_nodes,
                             const std::vector<double>& base_poly_durations,
                             std::vector<NodesVariablesPhaseBased::Ptr> ee_motion_nodes,
                             std::vector<NodesVariablesPhaseBased::Ptr> ee_force_nodes,
@@ -86,5 +86,6 @@ SplineHolder::SplineHolder (NodesVariables::Ptr base_lin_nodes,
     }
   }
 }
+*/
 
 } /* namespace towr */

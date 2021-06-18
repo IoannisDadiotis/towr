@@ -143,8 +143,8 @@ public:
                         Force,          ///< sets ForceConstraint
                         Swing,          ///< sets SwingConstraint
                         BaseRom,        ///< sets BaseMotionConstraint
-                        BaseAcc         ///< sets SplineAccConstraint
-//                        BaseAccLimit
+                        BaseAcc,         ///< sets SplineAccConstraint
+                        BaseAccLimit    // bound base acceleration
   };
   /**
    *  @brief Indentifiers to be used to add certain costs to the optimization

@@ -50,7 +50,6 @@ Parameters::Parameters ()
   dt_constraint_dynamic_ = 0.1;
   dt_constraint_base_motion_ = duration_base_polynomial_/4.; // only for base RoM constraint if added
   bound_phase_duration_ = std::make_pair(0.2, 1.0);  // used only when optimizing phase durations, so gait
-  //bound_phase_duration_ = std::make_pair(3.0, 3.0);  // for centauro, used only when optimizing phase durations
 
   // a minimal set of basic constraints
   constraints_.push_back(Terrain);
@@ -63,10 +62,7 @@ Parameters::Parameters ()
   constraints_.push_back(Swing); // creates smoother swing motions, not absolutely required.
 
   // optional costs to e.g penalize endeffector forces
-  costs_.push_back({ForcesCostID, 1.0e-4}); //weighed by 1.0 relative to other costs
-  costs_.push_back({EEMotionCostID, 100000.0});
-//  costs_.push_back({BaseVelLinCostID, 1.0});
-  costs_.push_back({BaseVelAngCostID, 100.0});
+  // costs_.push_back({ForcesCostID, 1.0}); weighed by 1.0 relative to other costs
 
   // bounds on final 6DoF base state
   bounds_final_lin_pos_ = {X,Y};

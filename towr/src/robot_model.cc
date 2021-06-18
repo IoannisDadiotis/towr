@@ -60,7 +60,7 @@ RobotModel::RobotModel(Robot robot)
     case Centauro:
       dynamic_model_   = std::make_shared<CentauroDynamicModel>();
       kinematic_model_ = std::make_shared<CentauroKinematicModel>();
-    break;
+      break;
     default:
       assert(false); // Error: Robot model not implemented.
       break;

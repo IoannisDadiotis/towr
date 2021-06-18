@@ -95,6 +95,7 @@ TowrRosInterface::UserCommandCallback(const TowrCommandMsg& msg)
   ROS_INFO(">>>>>> Constraint RoM dt is %f sec<<<<<<", formulation_.params_.dt_constraint_range_of_motion_);
   ROS_INFO(">>>>>> Constraint Dynamic dt is %f sec<<<<<<", formulation_.params_.dt_constraint_dynamic_);
   ROS_INFO(">>>>>> Constraint base motion dt is %f sec<<<<<<", formulation_.params_.dt_constraint_base_motion_);
+  ROS_INFO(">>>>>> Force polynomials per stance phase are %d <<<<<<", formulation_.params_.force_polynomials_per_stance_phase_);
 
   SetTowrInitialState();
 
@@ -116,10 +117,12 @@ TowrRosInterface::UserCommandCallback(const TowrCommandMsg& msg)
       nlp_.AddCostSet(c);
 
     solver_->Solve(nlp_);
-    SaveOptimizationAsRosbag(bag_file, robot_params_msg, msg, false);
 
     // Print constraints etc
     nlp_.PrintCurrent();
+
+    SaveOptimizationAsRosbag(bag_file, robot_params_msg, msg, false);
+
   }
 
   // playback using terminal commands
