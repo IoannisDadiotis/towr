@@ -39,6 +39,7 @@ HeightMap::MakeTerrain (TerrainID type)
 {
   switch (type) {
     case FlatID:      return std::make_shared<FlatGround>(); break;
+    case FlatNegativeID:      return std::make_shared<FlatGroundNegative>(); break;
     case BlockID:     return std::make_shared<Block>(); break;
     case StairsID:    return std::make_shared<Stairs>(); break;
     case GapID:       return std::make_shared<Gap>(); break;

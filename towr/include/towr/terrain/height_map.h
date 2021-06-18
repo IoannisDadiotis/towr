@@ -77,6 +77,7 @@ public:
    * @brief Terrains IDs corresponding for factory method.
    */
   enum TerrainID { FlatID,
+                   FlatNegativeID,
                    BlockID,
                    StairsID,
                    GapID,
@@ -174,6 +175,7 @@ private:
 const static std::map<HeightMap::TerrainID, std::string> terrain_names =
 {
   {HeightMap::FlatID,        "Flat"       },
+  {HeightMap::FlatNegativeID,"Flat Negative"},
   {HeightMap::BlockID,       "Block"      },
   {HeightMap::StairsID,      "Stairs"     },
   {HeightMap::GapID,         "Gap"        },

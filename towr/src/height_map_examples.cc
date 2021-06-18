@@ -37,6 +37,11 @@ FlatGround::FlatGround(double height)
   height_ = height;
 }
 
+FlatGroundNegative::FlatGroundNegative(double height)
+{
+  height_ = height;
+}
+
 double
 Block::GetHeight (double x, double y) const
 {

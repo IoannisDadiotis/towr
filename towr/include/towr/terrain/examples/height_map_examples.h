@@ -51,6 +51,16 @@ private:
   double height_; // [m]
 };
 
+// flat ground at -0.718 m
+class FlatGroundNegative : public HeightMap {
+public:
+  FlatGroundNegative(double height = -0.718);
+  double GetHeight(double x, double y)  const override { return height_; };
+
+private:
+  double height_; // [m]
+};
+
 /**
  * @brief Sample terrain with a step in height in x-direction.
  */
