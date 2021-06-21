@@ -121,6 +121,10 @@ TowrRosInterface::UserCommandCallback(const TowrCommandMsg& msg)
     // Print constraints etc
     nlp_.PrintCurrent();
 
+    // show decision variables (of last iteration)
+    ifopt::Composite::Ptr initial_variables = nlp_.GetOptVariables();
+    std::cout << "\n Debug::Initial variables are:" << initial_variables->GetValues();
+
     SaveOptimizationAsRosbag(bag_file, robot_params_msg, msg, false);
 
   }

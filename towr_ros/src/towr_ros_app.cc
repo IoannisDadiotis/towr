@@ -53,8 +53,21 @@ public:
     std::for_each(formulation_.initial_ee_W_.begin(), formulation_.initial_ee_W_.end(),
                   [&](Vector3d& p){ p.z() = z_ground; } // feet at 0 height
     );
-
+    // initial base position - complete definition
+    formulation_.initial_base_.lin.at(kPos).x() = 0.1;
+    formulation_.initial_base_.lin.at(kPos).y() = 0.0;
     formulation_.initial_base_.lin.at(kPos).z() = - nominal_stance_B.front().z() + z_ground;
+
+/*  // define initial positions for ee
+    Eigen::Vector3d fl = Eigen::Vector3d(0.35, 0.35, 0.0);
+    Eigen::Vector3d fr = Eigen::Vector3d(0.35, -0.35, 0.0);
+    Eigen::Vector3d hl = Eigen::Vector3d(-0.35, 0.35, 0.0);
+    Eigen::Vector3d hr = Eigen::Vector3d(-0.35, -0.35, 0.0);
+    formulation_.initial_ee_W_.push_back(fl);
+    formulation_.initial_ee_W_.push_back(fr);
+    formulation_.initial_ee_W_.push_back(hl);
+    formulation_.initial_ee_W_.push_back(hr);
+*/
   }
 
   /**
@@ -75,10 +88,10 @@ public:
       params.ee_in_contact_at_start_.push_back(gait_gen_->IsInContactAtStart(ee));
     }
 
-
     // alternating stance and swing:     ____-----_____
     // this code will create problem for biped, monoped
     // better use GaitGenerator for them
+    // 1-2-3-4 gait initialization
 /*    params.ee_phase_durations_.push_back({1.0, 1.0, 7.0});
     params.ee_phase_durations_.push_back({3.0, 1.0, 5.0});
     params.ee_phase_durations_.push_back({5.0, 1.0, 3.0});
@@ -88,18 +101,8 @@ public:
     params.ee_in_contact_at_start_.push_back(true);
     params.ee_in_contact_at_start_.push_back(true);
     params.ee_in_contact_at_start_.push_back(true);
-
-    // constructs optimization variables
-    params.duration_base_polynomial_ = 0.3;
-    params.force_polynomials_per_stance_phase_ = 3;
-    params.ee_polynomials_per_swing_phase_ = 2; // so step can at least lift leg
-
-    // parameters related to specific constraints (only used when it is added as well)
-    params.force_limit_in_normal_direction_ = 1000;
-    params.dt_constraint_range_of_motion_ = 0.3;
-    params.dt_constraint_dynamic_ = 0.3;
-    //params_.dt_constraint_base_motion_ = formulation.params_.duration_base_polynomial_/4.; // only for base RoM constraint if added
 */
+
     // Here you can also add other constraints or change parameters
     // params.constraints_.push_back(Parameters::BaseRom);
 
