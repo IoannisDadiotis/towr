@@ -54,6 +54,9 @@ public:
                   [&](Vector3d& p){ p.z() = z_ground; } // feet at 0 height
     );
 
+    // initial base - complete definition
+    formulation_.initial_base_.lin.at(kPos).x() = 0.1;
+    formulation_.initial_base_.lin.at(kPos).y() = 0.0;
     formulation_.initial_base_.lin.at(kPos).z() = - nominal_stance_B.front().z() + z_ground;
   }
 
