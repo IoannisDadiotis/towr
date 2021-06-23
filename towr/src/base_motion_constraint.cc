@@ -1,20 +1,15 @@
 /******************************************************************************
 Copyright (c) 2018, Alexander W. Winkler. All rights reserved.
-
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
-
 * Redistributions of source code must retain the above copyright notice, this
   list of conditions and the following disclaimer.
-
 * Redistributions in binary form must reproduce the above copyright notice,
   this list of conditions and the following disclaimer in the documentation
   and/or other materials provided with the distribution.
-
 * Neither the name of the copyright holder nor the names of its
   contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
-
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -44,15 +39,14 @@ BaseMotionConstraint::BaseMotionConstraint (double T, double dt,
 
   double dev_rad = 0.05;
   node_bounds_.resize(k6D);
-  node_bounds_.at(AX) = Bounds(-dev_rad, dev_rad);
-  node_bounds_.at(AY) = Bounds(-dev_rad, dev_rad);
+  node_bounds_.at(AX) = ifopt::NoBound;//Bounds(-dev_rad, dev_rad);
+  node_bounds_.at(AY) = ifopt::NoBound;//Bounds(-dev_rad, dev_rad);
   node_bounds_.at(AZ) = ifopt::NoBound;//Bounds(-dev_rad, dev_rad);
 
   double z_init = base_linear_->GetPoint(0.0).p().z();
   node_bounds_.at(LX) = ifopt::NoBound;
-  node_bounds_.at(LY) = ifopt::NoBound;//Bounds(-0.05, 0.05);
-  node_bounds_.at(LZ) = Bounds(z_init-0.02, z_init+0.1); // allow to move dev_z cm up and down
-
+  node_bounds_.at(LY) = Bounds(-0.1, 0.1);    //ifopt::NoBound;//Bounds(-0.05, 0.05);
+  node_bounds_.at(LZ) = ifopt::NoBound;         //Bounds(z_init-0.02, z_init+0.1); // allow to move dev_z cm up and down
 
   int n_constraints_per_node = node_bounds_.size();
   SetRows(GetNumberOfNodes()*n_constraints_per_node);
